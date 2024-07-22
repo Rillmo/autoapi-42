@@ -1,4 +1,4 @@
-# lv42-token-automation
+# lv42-api-key-automation
 
 ver 1.0
 
