@@ -22,6 +22,7 @@ async function getCredential(type) {
 	return res;
 }
 
+// write secret to file
 async function makeSecretFile() {
 	const dir = process.env.SECRET_PATH;
 	const fileName = '.secret42.txt';
@@ -88,7 +89,7 @@ async function makeSecretFile() {
 		// write to file '$PATH/.secret42.txt'
 		makeSecretFile();
 	} catch (e) {
-		console.log(e);
+		console.log('[ERROR] crawling error: ' + e);
 	} finally {
 		await driver.manage().setTimeouts({implicit: 3000});
 		await driver.quit();
