@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # get secret key from .secret42.txt
 KEY=$(<.secret42.txt)
 
