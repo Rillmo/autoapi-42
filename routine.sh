@@ -4,7 +4,7 @@ set -e
 
 # crawling 42intra
 echo "start crawling 42intra..."
-node crawling.js
+node crawling/selenium.js
 if [ ! -f ./.secret42.txt ]; then
 	echo "[ERROR] routine failed...quit"
 	exit 1
@@ -13,7 +13,7 @@ echo "finished crawling!"
 
 # apply secret to server's .env
 echo "start update secret to server's .env"
-/bin/sh server.sh
+/bin/sh update/server.sh
 echo "finished update"
 
 # delete .secret42.txt
