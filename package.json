@@ -1,10 +1,30 @@
 {
+  "name": "auto42",
+  "version": "1.0.0",
+  "description": "This is a program that helps services using 42API automatically update secret keys every month.",
+  "main": "app.js",
+  "scripts": {
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rillmo/lv42-api-key-automation.git"
+  },
+  "keywords": [
+    "42", "api", "42Seoul"
+  ],
+  "author": "junkim2",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rillmo/lv42-api-key-automation/issues"
+  },
+  "homepage": "https://github.com/Rillmo/lv42-api-key-automation#readme",
+  "bin": {
+    "auto42": "./app.js"
+  },
+  "type": "module",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "mocha": "10.6.0",
-    "selenium-webdriver": "^4.23.0"
-  },
-  "devDependencies": {
     "@playwright/test": "^1.48.0"
   }
 }

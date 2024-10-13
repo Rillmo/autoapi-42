@@ -3,3 +3,4 @@ node_modules
 .secret42*
 auto.conf
 memo
+config.json
