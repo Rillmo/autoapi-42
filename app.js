@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import readline from 'readline';
+import readline from 'node:readline/promises';
 import fs from 'fs';
 
 let id, pw;
@@ -15,41 +15,33 @@ const printWelcome = () => {
 	console.log('>> This is a program that helps services using 42API automatically update secret keys every month.')
 };
 
-// get input from user
+// get id & pw from user
 const getIdAndPw = async () => {
-	return new Promise((resolve) => {
-		const rl = readline.createInterface({
-			input: process.stdin,
-			output: process.stdout,
-			terminal: true,
-		});
-		let config = {intraID:"", intraPW:"", secretPath:"", appPath:"", appUrl:""};
-		// get id
-		rl.question('>> Please insert your intra ID : ', (id)=>{
-			config.intraID = id;
-			rl.stdoutMuted = true;
-			// get pw
-			rl.question('>> Please insert your intra PW : ', (pw)=>{
-				config.intraPW = pw;
-				resolve(config);
-			});
-			// mask pw input
-			rl._writeToOutput = (stringToWrite) => {
-			if (rl.stdoutMuted)
-				rl.output.write("*");
-			else
-				rl.output.write(stringToWrite);
-			};
-		});
-		rl.stdoutMuted = false;
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout,
+		terminal: true
 	});
-};
+	// get id
+	const id = await rl.question('>> Please insert your intra ID : ');
+	const pw = await rl.question('>> Please insert your intra PW : ');
+	rl.close();
+	return [id,pw];
+}
 
 // main function
 const run = async () => {
-	printWelcome();
-	const config = await getIdAndPw();
-	fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+	try {
+		printWelcome();
+		const config = await getIdAndPw();
+		console.log(config);
+		config.forEach((v) => {	// check empty values
+			if (!v) throw new Error('emtpy value detected');
+		});
+		fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+	} catch (e) {
+		console.log(`[ERROR] ${e.message}`);
+	}
 }
 
 run();
