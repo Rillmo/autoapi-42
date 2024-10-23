@@ -44,8 +44,10 @@ const getAppInfo = async () => {
 // main function
 const run = async () => {
 	try {
+		// print welcome message
 		printWelcome();
 		
+		// make config file
 		let config = {};
 		const idpw = await getIdAndPw();
 		config.intraId = idpw[0];
@@ -53,11 +55,14 @@ const run = async () => {
 		const appInfo = await getAppInfo();
 		config.appPath = appInfo[0];
 		config.appUrl = appInfo[1];
-
+		config.secretPath = "./";
 		Object.values(config).forEach((v) => {	// check empty values
 			if (!v) throw new Error('emtpy value detected');
 		});
 		fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+
+		// crawling
+		
 	} catch (e) {
 		console.log(`[ERROR] ${e.message}`);
 	}
