@@ -1,4 +1,4 @@
-# lv42-api-key-automation
+# AUTO42
 
 ver 1.0
 
