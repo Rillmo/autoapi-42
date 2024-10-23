@@ -5,3 +5,4 @@ auto.conf
 memo
 config.json
 test-results
+*.log
