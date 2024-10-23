@@ -4,6 +4,7 @@ import fs from 'fs';
 import { execSync } from 'child_process';
 
 const configPath = 'config.json';
+let mode;	// bg : 0 | fg : 1
 
 // print welcome message
 const printWelcome = () => {
@@ -57,13 +58,23 @@ const getAppInfo = async () => {
 // main function
 const run = async () => {
 	try {
+		// get argv options
+		const opt = process.argv.slice(2).at(0);
+		mode = opt == '-b' ? 0 : 1;
+
 		// print welcome message
 		printWelcome();
 
 		// check reset (if config is not exist)
-		let configStatus = true;
-		if (fs.existsSync(configPath))
-			configStatus = await checkReset();
+		let configStatus;
+		const configExist = fs.existsSync(configPath);
+		if (mode == 0) { // background mode
+			if (!configExist)	throw Error('background excute failed (config.json not found)');
+			else configStatus = false;
+		} else {		// foreground mode
+			if (!configExist)	configStatus = true;
+			else configStatus = await checkReset();
+		}
 		
 		// make config file (only when configStatus is true)
 		if (configStatus) {
@@ -82,9 +93,8 @@ const run = async () => {
 		}
 
 		// crawling
-		console.log('start crawling...');
 		const command = 'npx playwright test crawling/works/crawl.spec.ts';
-		execSync(command, { stdio : 'inherit' });
+		if (mode == 1)	execSync(command, { stdio : 'inherit' });
 	} catch (e) {
 		console.log(`[ERROR] ${e.message}`);
 	}
