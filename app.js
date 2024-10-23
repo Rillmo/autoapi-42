@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 import readline from 'node:readline/promises';
 import fs from 'fs';
-
-let id, pw;
+import { execSync } from 'child_process';
 
 // print welcome message
 const printWelcome = () => {
@@ -62,7 +61,8 @@ const run = async () => {
 		fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
 
 		// crawling
-		
+		const command = 'npx playwright test crawling/works/crawl.spec.ts';
+		execSync(command, { stdio : 'inherit' });
 	} catch (e) {
 		console.log(`[ERROR] ${e.message}`);
 	}
