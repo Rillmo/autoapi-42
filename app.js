@@ -3,6 +3,8 @@ import readline from 'node:readline/promises';
 import fs from 'fs';
 import { execSync } from 'child_process';
 
+const configPath = 'config.json';
+
 // print welcome message
 const printWelcome = () => {
 	console.log('█████╗  ██╗   ██╗████████╗ ██████╗ ██╗  ██╗██████╗');
@@ -12,7 +14,19 @@ const printWelcome = () => {
 	console.log('██║  ██║╚██████╔╝   ██║   ╚██████╔╝     ██║███████╗');
 	console.log('╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝      ╚═╝╚══════╝');
 	console.log('>> This is a program that helps services using 42API automatically update secret keys every month.')
-};
+}
+
+// check whether user wants a reset
+const checkReset = async () => {
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout,
+		terminal: true
+	});
+	const resetStatus = await rl.question('>> Do you want to reset config.json? (y/n, default: n) : ');
+	rl.close();
+	return resetStatus == 'y' ? true : false;
+}
 
 // get id & pw from user
 const getIdAndPw = async () => {
@@ -45,22 +59,30 @@ const run = async () => {
 	try {
 		// print welcome message
 		printWelcome();
+
+		// check reset (if config is not exist)
+		let configStatus = true;
+		if (fs.existsSync(configPath))
+			configStatus = await checkReset();
 		
-		// make config file
-		let config = {};
-		const idpw = await getIdAndPw();
-		config.intraId = idpw[0];
-		config.intraPw = idpw[1];
-		const appInfo = await getAppInfo();
-		config.appPath = appInfo[0];
-		config.appUrl = appInfo[1];
-		config.secretPath = "./";
-		Object.values(config).forEach((v) => {	// check empty values
-			if (!v) throw new Error('emtpy value detected');
-		});
-		fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+		// make config file (only when configStatus is true)
+		if (configStatus) {
+			let config = {};
+			const idpw = await getIdAndPw();
+			config.intraId = idpw[0];
+			config.intraPw = idpw[1];
+			const appInfo = await getAppInfo();
+			config.appPath = appInfo[0];
+			config.appUrl = appInfo[1];
+			config.secretPath = "./";
+			Object.values(config).forEach((v) => {	// check empty values
+				if (!v) throw new Error('emtpy value detected');
+			});
+			fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+		}
 
 		// crawling
+		console.log('start crawling...');
 		const command = 'npx playwright test crawling/works/crawl.spec.ts';
 		execSync(command, { stdio : 'inherit' });
 	} catch (e) {
