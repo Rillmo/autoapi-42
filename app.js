@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const configPath = path.join(__dirname, 'config.json');
 const logsPath = path.join(__dirname, 'logs');
 let config = {};
-let mode;	// excute mode : 0 | cron setting mode : 1
+let mode;	// config setting mode : 0 | cron setting mode : 1
 
 // print welcome message
 const printWelcome = () => {
@@ -42,8 +42,8 @@ const setConfig = async () => {
 		output: process.stdout,
 		terminal: true
 	});
-	config.id = await rl.question('>> Please insert your intra ID : ');
-	config.pw = await rl.question('>> Please insert your intra PW : ');
+	config.intraId = await rl.question('>> Please insert your intra ID : ');
+	config.intraPw = await rl.question('>> Please insert your intra PW : ');
 	config.appPath = await rl.question('>> Please insert your APP PATH(ex. https://profile.intra.42.fr/oauth/applications/4242) : ');
 	config.appUrl = await rl.question('>> Please insert your APP URL(ex. https://123.123.123.123:4242) : ');
 	config.npxpath = execSync('which npx').toString().trim();
@@ -68,15 +68,9 @@ const checkMode = async () => {
 		output: process.stdout,
 		terminal: true
 	});
-	const mode = await rl.question('>> Do you want to RUN NOW (0) or SET CRON (1) to automate? (default : 0) : ');
+	const mode = await rl.question('>> Do you want to SET CONFIG (0) or SET CRON (1) to automate? (default : 0) : ');
 	rl.close();
 	return mode == 0 ? 0 : 1;
-}
-
-// playwright crawling
-const crawl = async () => {
-	const command = `npx playwright test crawling/works/crawl.spec.ts`;
-	execSync(command, { stdio : 'inherit' });
 }
 
 // set crontab
@@ -117,7 +111,6 @@ const run = async () => {
 		switch (mode) {
 			case 0:		// excute mode
 				if (await checkReset())	await setConfig();
-				await crawl();
 				break;
 			case 1:		// cron setting mode
 				if (!fs.existsSync(configPath)) throw Error('config.json not found');
