@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "description": "This is a program that helps services using 42API automatically update secret keys every month.",
   "main": "app.js",
-  "scripts": {
-
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Rillmo/lv42-api-key-automation.git"
   },
   "keywords": [
-    "42", "api", "42Seoul"
+    "42",
+    "api",
+    "42Seoul"
   ],
   "author": "junkim2",
   "license": "ISC",
@@ -24,7 +24,8 @@
   },
   "type": "module",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "@playwright/test": "^1.48.0"
+    "@playwright/test": "^1.48.0",
+    "cron": "^3.1.7",
+    "dotenv": "^16.4.5"
   }
 }
