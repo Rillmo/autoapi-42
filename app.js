@@ -124,8 +124,6 @@ const run = async () => {
 				await getConfig();
 				await setCron();
 				break;
-			case 2:
-				
 			default:
 				break;
 		}
