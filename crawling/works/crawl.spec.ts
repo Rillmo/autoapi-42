@@ -67,7 +67,7 @@ test('crawl', async ({ page }) => {
 	
 		makeSecretFile(secretPath);
 	} catch (e) {
-		console.log("[ERROR] unknown error detected");
+		console.log(`[ERROR] ${e}`);
 	}
 });
 
